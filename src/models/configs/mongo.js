@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
-const mongoUri = "mongodb+srv://dhaval_changani:humble1234@cluster0.6nbuz.mongodb.net/myFirstDatabase?authSource=admin&replicaSet=atlas-oej8j8-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true"
+// getting secrets from dotenv
+import dotenv from "dotenv";
+dotenv.config();
+
+const mongoUri = process.env.mongouri;
 
 async function mongoInit() {
     try {
