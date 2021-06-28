@@ -17,7 +17,7 @@ const Port = process.env.PORT || 5001;
 // Middlewere
 app.use(
     cors({
-        origin: 'https://blissful-albattani-42cdb9.netlify.app/',
+        origin: 'https://blissful-albattani-42cdb9.netlify.app',
         credentials: true,
     })
 );
