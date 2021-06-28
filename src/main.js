@@ -17,10 +17,11 @@ const Port = process.env.PORT || 5001;
 // Middlewere
 app.use(
     cors({
-        origin: true,
+        origin: 'https://blissful-albattani-42cdb9.netlify.app/',
         credentials: true,
     })
 );
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
