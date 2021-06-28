@@ -82,7 +82,12 @@ export const customerLogin = async (req, res) => {
         } else {
             const token = jwt.sign({ id: user._id }, process.env.jwt_secret);
             //setting cookie
-            res.cookie("customerToken", token);
+            res.cookie("customerToken", token, {
+                httpOnly:true,
+                maxAge:3600000*5,
+                secure:true,
+                sameSite:'none',
+            });
             console.log("Token set inside cookie.");
             res.status(200).json({
                 data: { token },
