@@ -2,13 +2,17 @@ import mongoose from "mongoose";
 
 const servicesSchema = new mongoose.Schema(
     {
-        name: {
+        serviceID: {
+            type: mongoose.Schema.Types.ObjectId,
+        },
+        serviceManName: {
             type: String,
-            required: true,
+        },
+        servicename: {
+            type: String,
         },
         description: {
             type: String,
-            required: true,
         },
         price: {
             type: Number,

@@ -349,6 +349,8 @@ export const selectService = async (req, res) => {
 
 export const updateRating = async (req, res) => {
     try {
+        console.log(req.user);
+
         const servicemanID = req.params["servicemanID"];
         const serviceID = req.params["serviceID"];
         const rating = req.params["rating"];
@@ -357,7 +359,19 @@ export const updateRating = async (req, res) => {
 
         service.rating = rating;
         await serviceman.save();
-        console.log("servicelist", service);
+
+        const serviceUpdate = {
+            serviceID: service._id,
+            serviceManName: serviceman.name,
+            servicename: service.name,
+            description: service.description,
+            price: service.price,
+            rating: service.rating,
+        };
+
+        const user = await customerSchema.findOne({ email: req.user.email });
+        user.serviceslist.push(serviceUpdate);
+        await user.save();
 
         res.status(200).json({
             data: service,
