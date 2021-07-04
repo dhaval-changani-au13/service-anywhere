@@ -36,7 +36,7 @@ router.post("/customer-location-save/:longitude/:latitude", auth_customer, updat
 router.post("/service-location-save/:longitude/:latitude", auth_serviceman, updateLocationService);
 router.post("/add-service", auth_serviceman, addService);
 
-router.get("/askforservice", auth_customer, askforservice);
+router.get("/askforservice/:distance", auth_customer, askforservice);
 router.get("/select-serviceman/:servicemanID", auth_customer, selectServiceman);
 router.get("/select-service/:servicemanID/:serviceID", auth_customer, selectService);
 router.post("/update-rating/:servicemanID/:serviceID/:rating", auth_customer, updateRating);

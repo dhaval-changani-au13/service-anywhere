@@ -41,14 +41,18 @@ const customerSchema = mongoose.Schema(
             type: {
                 type: String,
                 enum: ["Point"],
+                default: "Point",
             },
             coordinates: {
                 type: [Number],
+                default: [0, 0],
             },
         },
         serviceslist: [servicesSchema],
     },
     { timestamps: true }
 );
+
+customerSchema.index({ location: "2dsphere" });
 
 export default mongoose.model("customer", customerSchema);
