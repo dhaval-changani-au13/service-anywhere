@@ -233,7 +233,7 @@ export const servicemanLogout = async (req, res) => {
         res.clearCookie("servicemanToken").status(200).json({
             data: {},
             errors: [],
-            message: "Loged Out",
+            message: "Logged Out",
         });
     } catch (err) {
         console.log(err.message);
