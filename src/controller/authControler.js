@@ -82,12 +82,14 @@ export const customerLogin = async (req, res) => {
         } else {
             const token = jwt.sign({ id: user._id }, process.env.jwt_secret);
             //setting cookie
+            // res.cookie("customerToken", token);
             res.cookie("customerToken", token, {
-                httpOnly:true,
-                maxAge:3600000*5,
-                secure:true,
-                sameSite:'none',
+                httpOnly: true,
+                maxAge: 3600000 * 5,
+                secure: true,
+                sameSite: "none",
             });
+
             console.log("Token set inside cookie.");
             res.status(200).json({
                 data: { token },
@@ -199,11 +201,13 @@ export const servicemanLogin = async (req, res) => {
             const token = jwt.sign({ id: user._id }, process.env.jwt_secret);
             //setting cookie
             res.cookie("servicemanToken", token, {
-                httpOnly:true,
-                maxAge:3600000*5,
-                secure:true,
-                sameSite:'none',
+                httpOnly: true,
+                maxAge: 3600000 * 5,
+                secure: true,
+                sameSite: "none",
             });
+            // res.cookie("servicemanToken", token);
+
             console.log("Token set inside cookie.");
             res.status(200).json({
                 data: { token },
@@ -246,12 +250,10 @@ export const updateLocationService = async (req, res) => {
         const latitude = req.params["latitude"];
 
         const user = await servicemanSchema.findOne({ _id: req.user._id });
-        user.location.coordinates = [];
-        user.location.coordinates.push(longitude);
-        user.location.coordinates.push(latitude);
-
+        user.location.coordinates.set(0, longitude);
+        user.location.coordinates.set(1, latitude);
+        user.markModified("location");
         await user.save();
-        console.log(user);
 
         res.status(200).json({
             data: user,
@@ -269,12 +271,10 @@ export const updateLocationCustomer = async (req, res) => {
         const latitude = req.params["latitude"];
 
         const user = await customerSchema.findOne({ _id: req.user._id });
-        user.location.coordinates = [];
-        user.location.coordinates.push(longitude);
-        user.location.coordinates.push(latitude);
-
+        user.location.coordinates.set(0, longitude);
+        user.location.coordinates.set(1, latitude);
+        user.markModified("location");
         await user.save();
-        console.log(user);
 
         res.status(200).json({
             data: user,
@@ -299,22 +299,6 @@ export const addService = async (req, res) => {
             data: user,
             errors: [],
             message: "Service Added",
-        });
-    } catch (err) {
-        console.log(err.message);
-    }
-};
-
-export const askforservice = async (req, res) => {
-    try {
-        const allServiceman = await servicemanSchema.find({});
-
-        console.log("servicelist", allServiceman);
-
-        res.status(200).json({
-            data: allServiceman,
-            errors: [],
-            message: "Serviceman List",
         });
     } catch (err) {
         console.log(err.message);
@@ -360,6 +344,8 @@ export const selectService = async (req, res) => {
 
 export const updateRating = async (req, res) => {
     try {
+        console.log(req.user);
+
         const servicemanID = req.params["servicemanID"];
         const serviceID = req.params["serviceID"];
         const rating = req.params["rating"];
@@ -368,12 +354,42 @@ export const updateRating = async (req, res) => {
 
         service.rating = rating;
         await serviceman.save();
-        console.log("servicelist", service);
+
+        const serviceUpdate = {
+            serviceID: service._id,
+            serviceManName: serviceman.name,
+            servicename: service.name,
+            description: service.description,
+            price: service.price,
+            rating: service.rating,
+        };
+
+        const user = await customerSchema.findOne({ email: req.user.email });
+        user.serviceslist.push(serviceUpdate);
+        await user.save();
 
         res.status(200).json({
             data: service,
             errors: [],
             message: "Serviceman",
+        });
+    } catch (err) {
+        console.log(err.message);
+    }
+};
+
+export const askforservice = async (req, res) => {
+    try {
+        const longitude = req.user.location.coordinates[0];
+        const lattitude = req.user.location.coordinates[1];
+        const distance = req.params.distance;
+
+        const allServiceman = await servicemanSchema.find();
+
+        res.status(200).json({
+            data: allServiceman,
+            errors: [],
+            message: "Serviceman List",
         });
     } catch (err) {
         console.log(err.message);

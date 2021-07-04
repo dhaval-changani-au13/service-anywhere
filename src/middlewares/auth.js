@@ -5,6 +5,7 @@ import servicemanSchema from "../models/schemas/serviceman.js";
 export const auth_customer = async (req, res, next) => {
     try {
         const token = req.cookies.customerToken;
+        console.log("token", token);
         if (!token) {
             return res.status(401).json({ data: {}, error: [], message: "Please login!!" });
         }
