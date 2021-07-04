@@ -5,7 +5,7 @@
     "type": "module",
     "main": "main.js",
     "scripts": {
-        "dev": "nodemon ./src/main.js",
+        "test": "nodemon ./src/main.js",
         "start": "node ./src/main.js"
     },
     "author": "Dhaval Changani",
